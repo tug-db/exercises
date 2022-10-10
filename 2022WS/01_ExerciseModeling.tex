@@ -1,0 +1,145 @@
+\documentclass[
+        a4paper,
+        pdftex,
+        english, 
+        oneside,%twoside, 
+        listof=totoc,%liststotoc, 
+        bibliography=totoc, %bibtotoc,
+        titlepage,
+        abstracton 
+]{scrartcl} %scrartcl
+
+\usepackage[
+    left=2.5cm,right=2.5cm,top=2cm,bottom=2cm,
+    includehead, includefoot
+]{geometry}
+
+%\clubpenalty = 9999
+%\widowpenalty = 9999 
+%\displaywidowpenalty = 9999
+
+
+%%%%%%%%%%%%%%%%%%%%%
+%package definitions
+%%%%%%%%%%%%%%%%%%%%%
+\usepackage[latin1]{inputenc} 
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subfigure}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage[normalem]{ulem}
+\usepackage{color}
+\usepackage[np,autolanguage]{numprint}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{tocbasic}
+\usepackage{rotating}
+\usepackage{floatflt}
+
+\usepackage{caption}
+\captionsetup{
+    %format=hang,labelfont=bf,font={small,sf},
+    skip=7pt
+}
+
+
+\usepackage{float}
+
+\usepackage[pdftex]{hyperref}
+\hypersetup{
+    unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=true,      % window fit to page when opened
+    pdfstartview={FitV},    % fits the width of the page to the window
+    pdftitle={Data Management: Exercise 01 -- Data Modeling},    % title
+    pdfauthor={Matthias Boehm}, % author
+    pdfsubject={},   % subject of the document
+    pdfcreator={},   % creator of the document
+    pdfproducer={}, % producer of the document
+    pdfkeywords={}, % list of keywords
+    pdfnewwindow=true,      % links in new window
+    bookmarksnumbered=true, % put section numbers in bookmarks
+    bookmarksopen=true,     % open up bookmark tree
+    bookmarksopenlevel=1,   % \maxdimen level to which bookmarks are open
+    colorlinks=false,        % false: boxed links; true: colored links
+    linkcolor=black,        % color of internal links  
+    citecolor=blue,         % color of links to bibliography
+    filecolor=black,        % color of file links
+    urlcolor=black          % color of external links
+}
+
+%\makeindex{notation}
+\makeindex
+
+\definecolor{gray}{RGB}{235,235,235}
+
+% Specific environments
+\newenvironment{itemize*}{\begin{itemize}\setlength{\itemsep}{4pt}\setlength{\parskip}{0pt}\setlength{\parsep}{0pt}}{\end{itemize}}
+\newenvironment{enumerate*}{\begin{enumerate}\setlength{\itemsep}{4pt}\setlength{\parskip}{0pt}\setlength{\parsep}{0pt}}{\end{enumerate}}   
+
+
+\begin{document}	
+
+\pagenumbering{arabic}
+\frenchspacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{flushleft}
+\noindent \textbf{Hussain Hussain, Adrian Spataru}\\
+\textit{Based on previous exercises from Prof. Matthias B\"ohm} \\
+Graz University of Technology\\
+Computer Science and Biomedical Engineering\\
+Institute of Interactive Systems and Data Science\\
+\end{flushleft}
+
+\bigskip
+
+\setcounter{section}{0}
+\section{Data Management WS22/23: Exercise 01 -- Data Modeling}
+\noindent \textbf{Published: October 10th, 2022}\\
+\noindent \textbf{Deadline: October 30th, 2022, 11.59pm}\\
+
+%motivation%
+\noindent This exercise on data modeling aims to provide practical experience in Entity-Relationship (ER) modeling, ER-relational mapping, and relational normalization. The expected result is a zip archive named \texttt{DBExercise01\_<student\_ID>.zip}, containing the partial results of the individual sub-tasks, submitted in TeachCenter.
+
+\subsection{ER Modeling (15/25 points)}
+\label{sec:ER}
+
+Create an ER diagram in Modified Chen (MC) notation---including entity types, relationship types, attributes, cardinalities, and keys (create surrogate keys if natural unique identifiers are missing)---for managing a music social network\footnote{Dataset link: \url{https://github.com/tug-db/datasets/tree/main/LFM-1b/raw}. A cleaned version of the dataset will be made available for Exercise 2 after additional data preparation and cleaning.}.
+Please use a digital tool for designing the ER diagram. We strongly recommend draw.io\footnote{\url{https://app.diagrams.net/}} since it has a toolbar for ER elements.
+There are multiple correct ways of modeling (alternatives, and level of details), however the diagram should capture the essential information of the following discourse:
+\begin{itemize}
+\item The platform contains \textit{users} who register their age, gender and country. A user also has a timestamp (date and time) of their registration. Each user can form friendships with other users.
+\item The dataset contains several \textit{artists}, described by their names. Each user can listen to different artists on the platform. We register the user-artist playcount, that is the number of times a user listened to an artist on the platform.
+\item The artist plays one or more \textit{genres} of music.
+\item The platform also keeps record of upcoming music \textit{festivals}. Each festival takes place in a certain country on a certain date and lasts for one or more days. A festival can either be indoors or outdoors, and may have a known standard ticket price. A festival features one or more genres.
+\item Each user can buy a number of tickets to one or more festivals. The set of tickets bought by a user can be either standard or VIP tickets.
+\item \textit{Countries} are further described by their population, and GDP (gross domestic product) per capita.
+\end{itemize}
+
+\noindent \textbf{Partial Result:} \texttt{ERDiagram.pdf}
+
+\subsection{Mapping ER Diagrams into the Relational Model (10/25 points)}
+\label{sec:RM}
+
+Create a relational schema for the ER diagram designed in Task~\ref{sec:ER} and bring it into third normal form, assuming functional dependencies from country codes to their names.
+This schema should include the relations and typed attributes, as well as all primary and foreign keys.
+% Furthermore, the schema should also ensure that no user is friends with themselves (TODO no duplicates).
+% Furthermore, the schema should also ensure that no person can vote multiple times at a single election (e.g., via in-person and mail-by-ballot voting).
+It is up to you if you provide either a SQL script (\texttt{CreateSchema.sql}) with \texttt{CREATE TABLE} statements, or provide a text schema (\texttt{Schema.txt}) in the following text notation (one line per table):
+\begin{verbatim}
+<Table>(<Attribute 1>:<type>(PK), <Attribute 2>:<type>, ..., <Attribute n>(FK))
+\end{verbatim}
+Here, PK and FK indicate primary and foreign keys, where multiple attributes with (PK) represent a composite primary key. If an attribute is both foreign key and (part of) a primary key, use \texttt{<Attribute m>(PK,FK)}. Please, adhere to this notation with unchanged parentheses and delimiters, and limit yourself to common data types (i.e., \texttt{int}, \texttt{numeric(p,s)}, \texttt{char(n)}, \texttt{varchar(n)}, or \texttt{date}) because this sub-task is subject to automated grading.\\
+
+\noindent \textbf{Partial Result:} \texttt{Schema.txt}, or \texttt{CreateSchema.sql}
+
+\bigskip
+
+\end{document}
