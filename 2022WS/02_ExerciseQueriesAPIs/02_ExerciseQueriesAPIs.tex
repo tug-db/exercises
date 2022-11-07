@@ -1,0 +1,179 @@
+\documentclass[
+        a4paper,
+        pdftex,
+        english, 
+        oneside,%twoside, 
+        listof=totoc,%liststotoc, 
+        bibliography=totoc, %bibtotoc,
+        titlepage,
+        abstracton 
+]{scrartcl} %scrartcl
+
+\usepackage[
+    left=2.5cm,right=2.5cm,top=2cm,bottom=2cm,
+    includehead, includefoot
+]{geometry}
+
+%\clubpenalty = 9999
+%\widowpenalty = 9999 
+%\displaywidowpenalty = 9999
+
+%%%%%%%%%%%%%%%%%%%%%
+%package definitions
+%%%%%%%%%%%%%%%%%%%%%
+\usepackage[latin1]{inputenc} 
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subfigure}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage[normalem]{ulem}
+\usepackage{color}
+\usepackage[np,autolanguage]{numprint}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{rotating}
+\usepackage{floatflt}
+\usepackage{caption}
+\usepackage{xcolor}
+\newcommand\todo[1]{\textcolor{red}{#1}}
+\captionsetup{
+    %format=hang,labelfont=bf,font={small,sf},
+    skip=7pt
+}
+
+\usepackage{float}
+
+\usepackage[pdftex]{hyperref}
+\hypersetup{
+    unicode=false,          % non-Latin characters in Acrobats bookmarks
+    pdftoolbar=true,        % show Acrobats toolbar?
+    pdfmenubar=true,        % show Acrobats menu?
+    pdffitwindow=true,      % window fit to page when opened
+    pdfstartview={FitV},    % fits the width of the page to the window
+    pdftitle={Data Management: Exercise 02 -- Query Languages and APIs},    % title
+    pdfauthor={Matthias Boehm}, % author
+    pdfsubject={},   % subject of the document
+    pdfcreator={},   % creator of the document
+    pdfproducer={}, % producer of the document
+    pdfkeywords={}, % list of keywords
+    pdfnewwindow=true,      % links in new window
+    bookmarksnumbered=true, % put section numbers in bookmarks
+    bookmarksopen=true,     % open up bookmark tree
+    bookmarksopenlevel=1,   % \maxdimen level to which bookmarks are open
+    colorlinks=false,        % false: boxed links; true: colored links
+    linkcolor=black,        % color of internal links  
+    citecolor=blue,         % color of links to bibliography
+    filecolor=black,        % color of file links
+    urlcolor=black          % color of external links
+}
+
+%\makeindex{notation}
+\makeindex
+
+\definecolor{gray}{RGB}{235,235,235}
+
+% Specific environments
+\newenvironment{itemize*}{\begin{itemize}\setlength{\itemsep}{4pt}\setlength{\parskip}{0pt}\setlength{\parsep}{0pt}}{\end{itemize}}
+\newenvironment{enumerate*}{\begin{enumerate}\setlength{\itemsep}{4pt}\setlength{\parskip}{0pt}\setlength{\parsep}{0pt}}{\end{enumerate}}  
+
+\begin{document}	
+
+\pagenumbering{arabic}
+\frenchspacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{flushleft}
+\noindent \textbf{Hussain Hussain, Adrian Spataru}\\
+\textit{Based on previous exercises from Prof. Matthias B\"ohm} \\
+Graz University of Technology\\
+Computer Science and Biomedical Engineering\\
+Institute of Interactive Systems and Data Science\\
+\end{flushleft}
+
+\bigskip
+
+\setcounter{section}{1}
+\section{Data Management WS2022: Exercise 02 -- Queries and APIs}
+\noindent \textbf{Published: November 07, 2022}\\
+\noindent \textbf{Deadline: December 04, 2022, 11.59pm}\\
+
+\noindent This exercise on query languages and APIs aims to provide practical experience with the open-source database management system (DBMS) PostgreSQL, the Structured Query Language (SQL), and call-level APIs such as ODBC and JDBC (or their Python equivalents). The expected result is a zip archive named \texttt{DBExercise02$\_<$studentID$>$.zip}, submitted in TeachCenter.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Database and Schema Creation via SQL (3/25 points)}
+\label{sec:SQL1}
+
+As a preparation step, setup the DBMS PostgreSQL (free, pre-built packages are available for Windows, Linux, Solaris, BSD, macOS) or use the provided Docker container. The task is to create a new database named \texttt{db<student\_ID>} and setup the provided schema\footnote{\url{https://github.com/tug-db/exercises/blob/main/2022WS/02_ExerciseQueriesAPIs/Supplements/schema.sql}}. \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Data Ingestion via ODBC/JDBC and SQL (10/25 points)}
+\label{sec:API}
+
+Write a program \texttt{IngestData.py} in a Python (version 3.6 or above) that loads the data from the provided data files\footnote{\url{https://github.com/tug-db/datasets/tree/main/LFM-1b}}, and ingests them into the schema created in Task~\ref{sec:SQL1}. Your code will be invoked as follows\footnote{ The concrete paths are irrelevant. In this example, the \texttt{./} just refers to a relative path from the current working directory and the backslash is a Linux line continuation.}: 
+\begin{verbatim}
+  ./IngestData.py users.csv artists.csv festival.csv countries.csv \
+   festival_users.csv playcount.csv festival_genre.csv friends.csv \
+    <host> <port> <database> <user> <password>
+\end{verbatim}
+
+\noindent All inserts should be performed via call-level interfaces like ODBC, JDBC, or Python's DB-API.\\
+\noindent We provide a template python file\footnote{\url{https://github.com/tug-db/exercises/blob/main/2022WS/02_ExerciseQueriesAPIs/Supplements/IngestData.py}} where the SQL connection is set up. You can use the template for this task.\\
+
+\textbf{Partial Results:} Source code \texttt{IngestData.py}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{SQL Query Processing (10/25 points)}
+\label{sec:SQL2}
+
+Having populated the created database in Task~\ref{sec:API}, it is now ready for query processing. Create SQL queries to answer the following questions and tasks (Q01-O06: 1 point, Q07/Q08: 2 points). The expected results per query will be provided on the course website. For any queries requiring you to return a real number, you should round the number to two decimal places.
+\begin{itemize}
+\item \textbf{Q01:} Which festivals are held in Austria? (return Festival.FestivalName)
+
+\item \textbf{Q02:} Which users listen to artists that play the genre `Hip Hop'? (return Users.UID)
+
+\item \textbf{Q03:} For each festival, compute the number of standard tickets bought by users above the age of 30. (return Festival.FestivalName, TicketCount; sort in a descending order of the TicketCount)
+
+\item \textbf{Q04:} For each artist, compute the average age of users who listen to that artist. (return Artist.ArtistName, AverageAge)
+
+\item \textbf{Q05:} For each country with population of 5 million or more, report the artist with the highest total playcount by users of that country. In case of multiple artists with the highest playcount, return all. (return Country.CountryName, Artist.ArtistName, TotalPlaycount; sorted in ascending order of Country.CountryName)
+
+% \item \textbf{Q06:} Find all pairs of friends who have the same favorite artist(s). We define the favorite artist(s) of a user as the artist(s) with the highest playcount by that user.(return User1.UID, User2.UID) \todo{query not written}
+
+\item \textbf{Q06:} Find all the users who do have friends but exclusively from their country. (return User.UID, Country.CountryName)
+
+\item \textbf{Q07:} For each festival beginning in November 2022, find the artist with the top total playcount, that plays one of the genres featured on that festival. In case of multiple top artists, return all. (return Festival.FestivalName, Artist.ArtistName, TotalPlayCount, Genre.GenreName)
+
+% \item \textbf{Q09:} Which Users have bought at least one ticket to a Festival in a Country other than their Country. (return User.username)
+
+\item \textbf{Q08:} We say that a user listens to a genre if they listen to any artist who plays that genre. For each Genre, what is the average number of friends that listeners of that genre have. (return Genre.GenreName, FriendCount)
+
+\end{itemize}
+
+\textbf{Partial Results:} SQL script for each query \texttt{Q01.sql}, \texttt{Q02.sql}, ..., \texttt{Q08.sql}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Query Plans and Relational Algebra (2/25 points)} 
+\label{sec:SQL3}
+
+Obtain a detailed explanation of the physical execution plan of \textbf{Q02} using \texttt{EXPLAIN}. Then annotate how the operators of this plan correspond to operations of extended relational algebra.\\
+
+\textbf{Partial Results:} SQL script \texttt{ExplainQ02.sql} with output and annotations in comments. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{appendix}
+%\section{Recommended Schema and Examples} \label{sec:schema_help}
+
+%Please include---even if unmodified---the schema (see Task~\ref{sec:SQL1}) into your submission. Furthermore, we also provide an additional example Python script that demonstrates how to access PostgreSQL through a call-level interface from an application program. This script assumes that Python 3 and pip are already installed. Note that the schema, Docker container, Python scripts, and expected results are made available on the course website. 
+
+%\end{appendix}
+\normalsize
+
+\end{document}	
